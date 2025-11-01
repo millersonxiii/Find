@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title>Собери Политиков</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Шапка -->
+    <header class="topbar">
+      <button class="nav-btn" id="inventoryBtn">
+        <img src="images/inv.png" alt="Инвентарь" />
+      </button>
+      
+      <div class="logo">
+        <h1>Собери Политиков</h1>
+        <div class="developer">Госдума</div>
+      </div>
+      
+      <button class="nav-btn" id="settingsBtn">
+        <img src="images/setting.png" alt="Настройки" />
+      </button>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+      <div class="games-grid">
+        <!-- Карточка Автомата -->
+        <div class="game-card" data-game="slots">
+          <div class="game-image">
+            <img src="images/game1.png" alt="Игровой Автомат" />
+          </div>
+          <h3>Игровой Автомат</h3>
+        </div>
+
+        <!-- Карточка Колеса Фортуны -->
+        <div class="game-card" data-game="wheel">
+          <div class="game-image">
+            <img src="images/game2.png" alt="Колесо Фортуны" />
+          </div>
+          <h3>Колесо Фортуны</h3>
+        </div>
+
+        <!-- Карточка Флагов -->
+        <div class="game-card" data-game="flags">
+          <div class="game-image">
+            <img src="images/game3.png" alt="Угадай Флаг" />
+          </div>
+          <h3>Угадай Флаг</h3>
+        </div>
+      </div>
+    </main>
+
+    <!-- Модальные окна -->
+    <section id="inventory" class="inventory hidden" aria-hidden="true">
+      <div class="inv-header">
+        <h2>КОЛЛЕКЦИЯ</h2>
+        <div class="inv-controls">
+          <button class="filter-btn" id="filterBtn">ФИЛЬТРЫ</button>
+          <button class="close-btn" id="closeInv">✕</button>
+        </div>
+      </div>
+      
+      <!-- Панель фильтров -->
+      <div id="filterPanel" class="filter-panel hidden">
+        <div class="filter-group">
+          <label>Сортировка:</label>
+          <select id="sortBy">
+            <option value="rarity-desc">От большего к меньшему</option>
+            <option value="rarity-asc">От меньшего к большему</option>
+            <option value="name-asc">По алфавиту А-Я</option>
+            <option value="name-desc">По алфавиту Я-А</option>
+            <option value="country-asc">По странам А-Я</option>
+            <option value="country-desc">По странам Я-А</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Показывать:</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="showAllCards" />
+            <label for="showAllCards">
+              <span class="toggle-label">Мои</span>
+              <span class="toggle-label">Все</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div id="cardsGrid" class="cards-grid" aria-live="polite"></div>
+      <div class="inv-footer">
+        <div id="invCount" class="inv-count">Карт: 0/84</div>
+      </div>
+    </section>
+
+    <!-- Модальное окно игры -->
+    <div id="game-modal" class="game-modal hidden" aria-hidden="true">
+      <div class="modal-content game-fullscreen">
+        <button class="close-btn" id="closeGame">✕</button>
+        <div id="gameContent" class="game-content">
+          <!-- Контент игры будет загружаться динамически -->
+        </div>
+      </div>
+    </div>
+
+    <div id="card-modal" class="card-modal hidden" aria-hidden="true">
+      <div class="card-modal-content">
+        <button class="close-btn" id="closeCard">✕</button>
+        <div class="card-details">
+          <div class="card-image">
+            <img id="detailCardImg" alt="Карта" />
+          </div>
+          <div class="card-info">
+            <h3 id="detailCardName"></h3>
+            <div class="card-meta">
+              <div id="detailCardTitle"></div>
+              <div id="detailCardCountry"></div>
+              <div id="detailCardRarity" class="rarity-badge"></div>
+            </div>
+            <div class="card-description" id="detailCardDescription"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Аудио элементы -->
+    <audio id="bg-music" loop preload="auto"></audio>
+    <audio id="wheelSound" preload="auto"></audio>
+    <audio id="slotSound" preload="auto"></audio>
+    <audio id="clickSound" preload="auto"></audio>
+  </div>
+
+<script src="main.js"></script>
+<script src="inventory.js"></script>
+<script src="game.js"></script>
+<script src="ui.js"></script>
+
+</body>
+</html>
