@@ -8,7 +8,6 @@
 </head>
 <body>
   <div id="app">
-    <!-- Шапка -->
     <header class="topbar">
       <button class="nav-btn" id="inventoryBtn">
         <img src="images/inv.png" alt="Инвентарь" />
@@ -24,26 +23,23 @@
       </button>
     </header>
 
-    <!-- Основной контент -->
     <main class="main-content">
       <div class="games-grid">
-        <!-- Карточка Автомата -->
-        <div class="game-card" data-game="slots">
+        <a href="slot.html" class="game-card">
           <div class="game-image">
             <img src="images/game1.png" alt="Игровой Автомат" />
           </div>
           <h3>Игровой Автомат</h3>
-        </div>
+        </a>
 
-        <!-- Карточка Колеса Фортуны -->
-        <div class="game-card" data-game="wheel">
+
+        <a href="wheel.html" class="game-card">
           <div class="game-image">
             <img src="images/game2.png" alt="Колесо Фортуны" />
           </div>
           <h3>Колесо Фортуны</h3>
-        </div>
+        </a>
 
-        <!-- Карточка Флагов -->
         <div class="game-card" data-game="flags">
           <div class="game-image">
             <img src="images/game3.png" alt="Угадай Флаг" />
@@ -53,7 +49,6 @@
       </div>
     </main>
 
-    <!-- Модальные окна -->
     <section id="inventory" class="inventory hidden" aria-hidden="true">
       <div class="inv-header">
         <h2>КОЛЛЕКЦИЯ</h2>
@@ -63,7 +58,6 @@
         </div>
       </div>
       
-      <!-- Панель фильтров -->
       <div id="filterPanel" class="filter-panel hidden">
         <div class="filter-group">
           <label>Сортировка:</label>
@@ -94,12 +88,10 @@
       </div>
     </section>
 
-    <!-- Модальное окно игры -->
     <div id="game-modal" class="game-modal hidden" aria-hidden="true">
       <div class="modal-content game-fullscreen">
         <button class="close-btn" id="closeGame">✕</button>
         <div id="gameContent" class="game-content">
-          <!-- Контент игры будет загружаться динамически -->
         </div>
       </div>
     </div>
@@ -124,7 +116,6 @@
       </div>
     </div>
 
-    <!-- Аудио элементы -->
     <audio id="bg-music" loop preload="auto"></audio>
     <audio id="wheelSound" preload="auto"></audio>
     <audio id="slotSound" preload="auto"></audio>
