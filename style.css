@@ -68,26 +68,24 @@ body {
 .nav-btn {
   width: 44px;
   height: 44px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: transparent;
+  border: none;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0;
 }
 
 .nav-btn:hover {
-  background: var(--bg-primary);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-dark);
 }
 
 .nav-btn img {
-  width: 24px;
-  height: 24px;
-  filter: brightness(0) invert(1);
+  width: 44px;
+  height: 44px;
   transition: transform 0.3s ease;
 }
 
@@ -205,8 +203,9 @@ body {
 
 .inv-controls {
   display: flex;
-  gap: 12px;
+  gap: 20px;
   align-items: center;
+  margin-right: 45px;
 }
 
 .filter-panel {
