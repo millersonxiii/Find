@@ -1,131 +1,484 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-  <title>Собери Политиков</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Собери Политиков</title>
+    <style>
+        :root {
+          --bg-primary: #0a0e17;
+          --bg-secondary: #131a2a;
+          --bg-card: #1a2235;
+          --bg-modal: rgba(10, 14, 23, 0.98);
+          --accent-gold: #ffd700;
+          --accent-silver: #c0c0c0;
+          --accent-bronze: #cd7f32;
+          --text-primary: #ffffff;
+          --text-secondary: #a0aec0;
+          --text-muted: #718096;
+          --border-color: rgba(255, 255, 255, 0.15);
+          --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.6);
+          --shadow-light: 0 4px 16px rgba(255, 255, 255, 0.1);
+          
+          --rarity-common: #84c78a;
+          --rarity-rare: #84b8ff;
+          --rarity-epic: #c89cff;
+          --rarity-legend: #ffd37a;
+          --rarity-mythic: #ff7a7a;
+          --rarity-secret: #9ea0a6;
+          
+          --radius-sm: 8px;
+          --radius-md: 12px;
+          --radius-lg: 16px;
+        }
+
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+          height: 100%;
+          overflow: hidden;
+        }
+
+        body {
+          font-family: 'Inter', 'Segoe UI', system-ui, Roboto, Arial, sans-serif;
+          color: var(--text-primary);
+          background: var(--bg-primary);
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          padding: 20px;
+        }
+
+        .container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 30px;
+          width: 100%;
+          max-width: 500px;
+          text-align: center;
+          padding: 20px;
+        }
+
+        .logo {
+          margin-bottom: 20px;
+        }
+
+        .logo h1 {
+          font-size: 2.5rem;
+          font-weight: 800;
+          color: var(--text-primary);
+          text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+          margin-bottom: 10px;
+          background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .logo p {
+          font-size: 1rem;
+          color: var(--text-secondary);
+        }
+
+        .main-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .btn {
+          padding: 16px 32px;
+          border: none;
+          border-radius: var(--radius-md);
+          font-size: 1.1rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          box-shadow: var(--shadow-dark);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+          left: 100%;
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
+          color: #000;
+        }
+
+        .btn-primary:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+          transform: translateY(-4px);
+          border-color: var(--accent-gold);
+          box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+        }
+
+        .telegram-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 50px;
+          height: 50px;
+          background: linear-gradient(135deg, #0088cc, #34a853);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: var(--shadow-dark);
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
+
+        .telegram-btn:hover {
+          transform: scale(1.1) rotate(5deg);
+          box-shadow: 0 8px 20px rgba(0, 136, 204, 0.5);
+        }
+
+        .telegram-btn svg {
+          width: 24px;
+          height: 24px;
+          fill: white;
+        }
+
+        .install-btn {
+          position: absolute;
+          bottom: 20px;
+          padding: 12px 24px;
+          background: linear-gradient(135deg, #4285f4, #34a853);
+          border: none;
+          border-radius: var(--radius-md);
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: var(--shadow-dark);
+        }
+
+        .install-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: var(--bg-modal);
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+        }
+
+        .modal.active {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .modal-content {
+          background: var(--bg-card);
+          border-radius: var(--radius-lg);
+          padding: 30px;
+          max-width: 600px;
+          width: 100%;
+          max-height: 80vh;
+          overflow-y: auto;
+          position: relative;
+          box-shadow: var(--shadow-dark);
+          transform: translateY(30px);
+          transition: transform 0.4s ease;
+        }
+
+        .modal.active .modal-content {
+          transform: translateY(0);
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 32px;
+          height: 32px;
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
+          border-radius: 50%;
+          color: var(--text-primary);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          z-index: 10;
+          transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+          background: var(--accent-gold);
+          color: #000;
+          transform: rotate(90deg);
+        }
+
+        .modal-title {
+          font-size: 1.8rem;
+          font-weight: 800;
+          margin-bottom: 20px;
+          color: var(--text-primary);
+          text-align: center;
+        }
+
+        .modal-text {
+          font-size: 1rem;
+          line-height: 1.6;
+          color: var(--text-secondary);
+          margin-bottom: 20px;
+        }
+
+        .modal-link {
+          color: #ff7a00;
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
+
+        .modal-link:hover {
+          color: var(--accent-gold);
+          text-decoration: underline;
+        }
+
+        .team-section {
+          margin-top: 25px;
+          padding-top: 20px;
+          border-top: 1px solid var(--border-color);
+        }
+
+        .team-title {
+          font-size: 1.2rem;
+          font-weight: 700;
+          margin-bottom: 15px;
+          color: var(--text-primary);
+        }
+
+        .team-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 15px;
+        }
+
+        .team-item {
+          background: var(--bg-secondary);
+          padding: 15px;
+          border-radius: var(--radius-md);
+          border: 1px solid var(--border-color);
+        }
+
+        .team-role {
+          font-size: 0.9rem;
+          color: var(--text-muted);
+          margin-bottom: 5px;
+        }
+
+        .team-name {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .disclaimer {
+          margin-top: 20px;
+          padding: 15px;
+          background: rgba(255, 122, 0, 0.1);
+          border-radius: var(--radius-md);
+          border-left: 4px solid #ff7a00;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container > * {
+          animation: fadeIn 0.6s ease forwards;
+        }
+
+        .logo { animation-delay: 0.1s; }
+        .main-buttons { animation-delay: 0.3s; }
+
+        @media (max-width: 768px) {
+          .logo h1 {
+            font-size: 2rem;
+          }
+          
+          .modal-content {
+            padding: 20px;
+          }
+          
+          .team-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+    </style>
 </head>
 <body>
-  <div id="app">
-    <header class="topbar">
-      <button class="nav-btn" id="inventoryBtn">
-        <img src="images/inv.png" alt="Инвентарь" />
-      </button>
-      
-      <div class="logo">
-        <h1>Собери Политиков</h1>
-        <div class="developer">Госдума</div>
-      </div>
-      
-      <button class="nav-btn" id="settingsBtn">
-        <img src="images/setting.png" alt="Настройки" />
-      </button>
-    </header>
+    <a href="https://t.me/Politiki_World" class="telegram-btn" target="_blank">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.14.141-.259.259-.374.261l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.136-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+        </svg>
+    </a>
 
-    <main class="main-content">
-      <div class="games-grid">
-        <a href="slot.html" class="game-card">
-          <div class="game-image">
-            <img src="images/game1.png" alt="Игровой Автомат" />
-          </div>
-          <h3>Игровой Автомат</h3>
-        </a>
-
-
-        <a href="wheel.html" class="game-card">
-          <div class="game-image">
-            <img src="images/game2.png" alt="Колесо Фортуны" />
-          </div>
-          <h3>Колесо Фортуны</h3>
-        </a>
-
-        <div class="game-card" data-game="flags">
-          <div class="game-image">
-            <img src="images/game3.png" alt="Угадай Флаг" />
-          </div>
-          <h3>Угадай Флаг</h3>
+    <div class="container">
+        <div class="logo">
+            <h1>Собери Политиков</h1>
+            <p>Коллекция европейских правителей 21-века</p>
         </div>
-      </div>
-    </main>
-
-    <section id="inventory" class="inventory hidden" aria-hidden="true">
-      <div class="inv-header">
-        <h2>КОЛЛЕКЦИЯ</h2>
-        <div class="inv-controls">
-          <button class="filter-btn" id="filterBtn">ФИЛЬТРЫ</button>
-          <button class="close-btn" id="closeInv">✕</button>
+        
+        <div class="main-buttons">
+            <button class="btn btn-primary" onclick="window.location.href='menu.html'">Играть</button>
+            <button class="btn btn-secondary" id="infoBtn">Информация</button>
         </div>
-      </div>
-      
-      <div id="filterPanel" class="filter-panel hidden">
-        <div class="filter-group">
-          <label>Сортировка:</label>
-          <select id="sortBy">
-            <option value="rarity-desc">От большего к меньшему</option>
-            <option value="rarity-asc">От меньшего к большему</option>
-            <option value="name-asc">По алфавиту А-Я</option>
-            <option value="name-desc">По алфавиту Я-А</option>
-            <option value="country-asc">По странам А-Я</option>
-            <option value="country-desc">По странам Я-А</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label>Показывать:</label>
-          <div class="toggle-switch">
-            <input type="checkbox" id="showAllCards" />
-            <label for="showAllCards">
-              <span class="toggle-label">Мои</span>
-              <span class="toggle-label">Все</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      
-      <div id="cardsGrid" class="cards-grid" aria-live="polite"></div>
-      <div class="inv-footer">
-        <div id="invCount" class="inv-count">Карт: 0/84</div>
-      </div>
-    </section>
-
-    <div id="game-modal" class="game-modal hidden" aria-hidden="true">
-      <div class="modal-content game-fullscreen">
-        <button class="close-btn" id="closeGame">✕</button>
-        <div id="gameContent" class="game-content">
-        </div>
-      </div>
     </div>
 
-    <div id="card-modal" class="card-modal hidden" aria-hidden="true">
-      <div class="card-modal-content">
-        <button class="close-btn" id="closeCard">✕</button>
-        <div class="card-details">
-          <div class="card-image">
-            <img id="detailCardImg" alt="Карта" />
-          </div>
-          <div class="card-info">
-            <h3 id="detailCardName"></h3>
-            <div class="card-meta">
-              <div id="detailCardTitle"></div>
-              <div id="detailCardCountry"></div>
-              <div id="detailCardRarity" class="rarity-badge"></div>
+    <button class="install-btn" id="installBtn">
+        Установить приложение
+    </button>
+
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2 class="modal-title">Собери Политиков</h2>
+            <p class="modal-text">
+                Собери Политиков - уникальная аркадная веб-игра, где с помощью разных мини игр вам придётся собрать всю коллекцию европейских правителей 21-века
+            </p>
+            <p class="modal-text">
+                Разработчики являются членами электронного государства 
+                <a href="https://t.me/Politiki_World" class="modal-link" target="_blank">"Госдума"</a>
+            </p>
+            
+            <div class="team-section">
+                <h3 class="team-title">Команда разработки</h3>
+                <div class="team-grid">
+                    <div class="team-item">
+                        <div class="team-role">Идея:</div>
+                        <div class="team-name">Экс-Донни<br>Владимир Путин</div>
+                    </div>
+                    <div class="team-item">
+                        <div class="team-role">Код:</div>
+                        <div class="team-name">Владимир Путин</div>
+                    </div>
+                    <div class="team-item">
+                        <div class="team-role">Тестировщики:</div>
+                        <div class="team-name">Евгений Пригожин<br>Михаил Мишустин<br>Экс-Донни</div>
+                    </div>
+                    <div class="team-item">
+                        <div class="team-role">Функциональный Помощник:</div>
+                        <div class="team-name">Евгений Пригожин</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-description" id="detailCardDescription"></div>
-          </div>
+            
+            <div class="disclaimer">
+                Игра не хочет кого либо оскорбить или унизить, информация взята из открытых источников, а все пасхалки являются юмористическими
+            </div>
         </div>
-      </div>
     </div>
 
-    <audio id="bg-music" loop preload="auto"></audio>
-    <audio id="wheelSound" preload="auto"></audio>
-    <audio id="slotSound" preload="auto"></audio>
-    <audio id="clickSound" preload="auto"></audio>
-  </div>
+    <script>
+        const infoBtn = document.getElementById('infoBtn');
+        const closeModal = document.getElementById('closeModal');
+        const infoModal = document.getElementById('infoModal');
+        const installBtn = document.getElementById('installBtn');
+        
+        infoBtn.addEventListener('click', () => {
+            infoModal.classList.add('active');
+        });
+        
+        closeModal.addEventListener('click', () => {
+            infoModal.classList.remove('active');
+        });
+        
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) {
+                infoModal.classList.remove('active');
+            }
+        });
 
-<script src="main.js"></script>
-<script src="inventory.js"></script>
-<script src="game.js"></script>
-<script src="ui.js"></script>
+        installBtn.addEventListener('click', () => {
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            
+            if (!isChrome) {
+                alert('Установка работает только в браузере Google Chrome');
+                return;
+            }
+            let deferredPrompt;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                deferredPrompt.prompt();
+                
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Пользователь принял установку');
+                    } else {
+                        console.log('Пользователь отклонил установку');
+                    }
+                    deferredPrompt = null;
+                });
+            });
+            
 
+            if (!deferredPrompt) {
+                alert('Установка в данный момент доступна строго в браузере "Google Chrome"');
+            }
+        });
+    </script>
 </body>
 </html>

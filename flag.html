@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Игровой Автомат - Собери Политиков</title>
+  <title>Угадай Флаг - Викторина</title>
   <style>
     :root {
       --bg-primary: #0a0e17;
@@ -112,26 +112,36 @@
       font-weight: 500;
     }
 
-    .main-menu-btn {
+    .stats-container {
+      display: flex;
+      gap: 15px;
+      align-items: center;
       padding: 10px 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .stat {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
+      padding: 8px 12px;
       border-radius: var(--radius-md);
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
+      border: 1px solid var(--border-color);
+      text-align: center;
+      min-width: 80px;
     }
 
-    .main-menu-btn:hover {
-      background: var(--bg-primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-dark);
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent-gold);
     }
 
-    .slots-container {
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .game-container {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -141,93 +151,53 @@
       gap: 30px;
     }
 
-    .slots-machine {
-      background: linear-gradient(135deg, #1a2235, #0f1625);
-      border-radius: var(--radius-lg);
-      padding: 30px;
-      border: 4px solid var(--accent-gold);
-      box-shadow: var(--shadow-dark);
-      position: relative;
-      overflow: hidden;
+ 
+    .flag-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
 
-    .slots-machine::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, transparent 0%, rgba(255,215,0,0.1) 50%, transparent 100%);
-      pointer-events: none;
-    }
-
-    .reels-container {
-      display: flex;
+    .answers-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 15px;
-      margin-bottom: 30px;
+      max-width: 500px;
+      width: 100%;
     }
 
-    .reel {
-      width: 100px;
-      height: 300px;
-      background: var(--bg-primary);
-      border: 3px solid var(--border-color);
+    .answer-btn {
+      padding: 16px;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
       border-radius: var(--radius-md);
-      overflow: hidden;
-      position: relative;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
     }
 
-    .reel-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      transition: transform 0.1s linear;
+    .answer-btn:hover {
+      background: var(--bg-card);
+      transform: translateY(-2px);
+      border-color: var(--accent-gold);
     }
 
-    .reel-item {
-      width: 100%;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid var(--border-color);
+    .answer-btn.correct {
+      background: #2d5016;
+      border-color: #4ade80;
     }
 
-    .reel-item img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-      transition: transform 0.3s ease;
+    .answer-btn.incorrect {
+      background: #5c1a1a;
+      border-color: #f87171;
     }
 
-    .reel-mask {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, 
-        rgba(10,14,23,0.9) 0%,
-        transparent 30%,
-        transparent 70%,
-        rgba(10,14,23,0.9) 100%);
-      pointer-events: none;
-    }
-
-    .slots-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .slots-spin-btn {
-      padding: 16px 48px;
-      font-size: 20px;
+    .restart-btn {
+      padding: 16px 32px;
+      font-size: 18px;
       font-weight: 800;
       background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
       border: none;
@@ -236,42 +206,63 @@
       cursor: pointer;
       transition: all 0.3s ease;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       box-shadow: var(--shadow-dark);
-      position: relative;
-      overflow: hidden;
     }
 
-    .slots-spin-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: left 0.5s;
-    }
-
-    .slots-spin-btn:hover::before {
-      left: 100%;
-    }
-
-    .slots-spin-btn:hover:not(:disabled) {
+    .restart-btn:hover {
       transform: translateY(-4px);
       box-shadow: 0 12px 25px rgba(255, 215, 0, 0.4);
     }
 
-    .slots-spin-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
+    .inventory {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-modal);
+      z-index: 1000;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
-    .slots-timer {
-      color: var(--text-secondary);
-      font-size: 16px;
-      font-weight: 600;
+    .inv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .inv-header h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .inv-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-right: 8px;
+    }
+
+    .filter-btn:hover {
+      background: var(--bg-primary);
     }
 
     .close-btn {
@@ -295,68 +286,158 @@
       transform: rotate(90deg);
     }
 
-    .slots-result-modal {
+    .cards-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      background: var(--bg-secondary);
+    }
+
+    .card-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    
+    .main-menu-btn {
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    .card-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .rarity-strip {
+      height: 6px;
+      border-radius: 3px;
+      margin-top: auto;
+    }
+
+    .rarity-Обычные { background: var(--rarity-common); }
+    .rarity-Редкие { background: var(--rarity-rare); }
+    .rarity-Эпические { background: var(--rarity-epic); }
+    .rarity-Легендарные { background: var(--rarity-legend); }
+    .rarity-Мифические { background: var(--rarity-mythic); }
+    .rarity-Секретные { background: var(--rarity-secret); }
+
+    .inv-footer {
+      padding: 16px 0;
+      border-top: 1px solid var(--border-color);
+      margin-top: 16px;
+    }
+
+    .inv-count {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .card-modal {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
       background: var(--bg-modal);
-      z-index: 2000;
+      z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      overflow: hidden;
     }
 
-    .slots-result-content {
+    .card-modal-content {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
-      padding: 30px;
-      max-width: 400px;
+      padding: 24px;
+      max-width: 500px;
       width: 100%;
-      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
       position: relative;
       box-shadow: var(--shadow-dark);
-      animation: modalAppear 0.5s ease;
+      overflow-x: hidden;
     }
 
-    .result-title {
-      font-size: 28px;
+    .card-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-dark);
+    }
+
+    .card-info h3 {
+      font-size: 24px;
       font-weight: 800;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       color: var(--text-primary);
     }
 
-    .result-card {
-      margin: 20px 0;
-    }
-
-    .result-card img {
-      width: 150px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: var(--radius-md);
-      margin-bottom: 15px;
-      box-shadow: var(--shadow-dark);
-    }
-
-    .result-rarity {
+    .rarity-badge {
       display: inline-block;
-      padding: 6px 16px;
+      padding: 4px 12px;
       border-radius: 20px;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
-    .result-rarity.rarity-Обычные { background: var(--rarity-common); color: #000; }
-    .result-rarity.rarity-Редкие { background: var(--rarity-rare); color: #000; }
-    .result-rarity.rarity-Эпические { background: var(--rarity-epic); color: #000; }
-    .result-rarity.rarity-Легендарные { background: var(--rarity-legend); color: #000; }
-    .result-rarity.rarity-Мифические { background: var(--rarity-mythic); color: #000; }
-    .result-rarity.rarity-Секретные { background: var(--rarity-secret); color: #000; }
+    .card-description {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
 
     .hidden {
       display: none !important;
@@ -368,33 +449,37 @@
       opacity: 0;
     }
 
-    @keyframes modalAppear {
-      from { opacity: 0; transform: scale(0.8) translateY(20px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    @keyframes reelSpin {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-2000px); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     @media (max-width: 768px) {
-      .reel {
-        width: 80px;
-        height: 240px;
-      }
-      
-      .reel-item {
-        height: 80px;
-      }
-      
-      .reel-item img {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .slots-machine {
+      .flag-container {
         padding: 20px;
+        max-width: 300px;
+      }
+      
+      .answers-container {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+      }
+      
+      .stats-container {
+        gap: 10px;
+      }
+      
+      .stat {
+        min-width: 70px;
+        padding: 6px 10px;
+      }
+      
+      .stat-value {
+        font-size: 16px;
+      }
+      
+      .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       }
     }
 
@@ -407,18 +492,19 @@
         font-size: 18px;
       }
       
-      .reel {
-        width: 70px;
-        height: 210px;
+      .flag-container {
+        padding: 15px;
+        max-width: 250px;
       }
       
-      .reel-item {
-        height: 70px;
+      .answer-btn {
+        padding: 14px;
+        font-size: 14px;
       }
       
-      .reel-item img {
-        width: 50px;
-        height: 50px;
+      .card-details {
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
     }
   </style>
@@ -437,68 +523,259 @@
       </button>
     </header>
 
-    <main class="slots-container">
-      <div class="slots-machine">
-        <div class="reels-container">
-          <div class="reel" id="reel1">
-            <div class="reel-inner" id="reelInner1"></div>
-            <div class="reel-mask"></div>
-          </div>
-          <div class="reel" id="reel2">
-            <div class="reel-inner" id="reelInner2"></div>
-            <div class="reel-mask"></div>
-          </div>
-          <div class="reel" id="reel3">
-            <div class="reel-inner" id="reelInner3"></div>
-            <div class="reel-mask"></div>
-          </div>
-        </div>
-        
-        <div class="slots-controls">
-          <button class="slots-spin-btn" id="slotsSpinBtn">КРУТИТЬ</button>
-          <div class="slots-timer" id="slotsTimer">Можно крутить</div>
-        </div>
+    <div class="stats-container">
+      <div class="stat">
+        <div class="stat-value" id="currentScore">0</div>
+        <div class="stat-label">Текущая серия</div>
       </div>
-    </main>
-
-    <div id="slots-result-modal" class="slots-result-modal hidden">
-      <div class="slots-result-content">
-        <button class="close-btn" id="closeResult">✕</button>
-        <div id="resultContent"></div>
+      <div class="stat">
+        <div class="stat-value" id="bestScore">0</div>
+        <div class="stat-label">Рекорд</div>
       </div>
     </div>
 
-    <audio id="click-sound" src="sounds/click.mp3" preload="auto"></audio>
-    <audio id="loss-sound" src="sounds/loss.mp3" preload="auto"></audio>
-    <audio id="slot-spin-sound" src="sounds/slot.mp3" preload="auto"></audio>
-    <audio id="win-sound" src="sounds/win.mp3" preload="auto"></audio>
+    <main class="game-container">
+      <div class="flag-container">
+        <img id="flagImage" class="flag-image" src="" alt="Угадай флаг" />
+      </div>
+      
+      <div class="answers-container" id="answersContainer">
+      </div>
+      
+      <button class="restart-btn hidden" id="restartBtn">Сначала</button>
+    </main>
+
+    <div id="inventory" class="inventory hidden">
+      <div class="inv-header">
+        <h2>Коллекция политиков</h2>
+        <div class="inv-controls">
+          <button class="close-btn" id="closeInventory">✕</button>
+        </div>
+      </div>
+      <div class="cards-grid" id="cardsGrid">
+      </div>
+      <div class="inv-footer">
+        <div class="inv-count" id="invCount">Карт: 0/0</div>
+      </div>
+    </div>
+
+    <div id="card-modal" class="card-modal hidden">
+      <div class="card-modal-content">
+        <button class="close-btn" id="closeCardModal">✕</button>
+        <div id="cardModalContent"></div>
+      </div>
+    </div>
+
+    <audio id="correct-sound" src="sound/yes.mp3" preload="auto"></audio>
+    <audio id="incorrect-sound" src="sound/no.mp3" preload="auto"></audio>
+    <audio id="click-sound" src="sound/clicking.mp3" preload="auto"></audio>
     <audio id="bg-music" src="music/fon1.mp3" loop preload="auto"></audio>
   </div>
 
   <script>
     (() => {
-      const RARITY_CHANCES = {
-        'Обычные': 40,
-        'Редкие': 30,
-        'Эпические': 15,
-        'Легендарные': 8,
-        'Мифические': 5,
-        'Секретные': 2
-      };
-
-      const SYMBOLS = [
-        { image: 'images/avt1.png', rarity: 'Обычные' },
-        { image: 'images/avt2.png', rarity: 'Обычные' },
-        { image: 'images/avt3.png', rarity: 'Редкие' },
-        { image: 'images/avt4.png', rarity: 'Редкие' },
-        { image: 'images/avt5.png', rarity: 'Эпические' },
-        { image: 'images/avt6.png', rarity: 'Эпические' },
-        { image: 'images/avt7.png', rarity: 'Легендарные' },
-        { image: 'images/avt8.png', rarity: 'Мифические' },
-        { image: 'images/avt9.png', rarity: 'Секретные' }
+      const FLAGS = [
+        { country: "Россия", file: "russia.png" },
+        { country: "США", file: "united_states.png" },
+        { country: "Германия", file: "germany.png" },
+        { country: "Франция", file: "france.png" },
+        { country: "Великобритания", file: "united_kingdom.png" },
+        { country: "Италия", file: "italy.png" },
+        { country: "Испания", file: "spain.png" },
+        { country: "Украина", file: "ukraine.png" },
+        { country: "Польша", file: "poland.png" },
+        { country: "Китай", file: "china.png" },
+        { country: "Япония", file: "japan.png" },
+        { country: "Канада", file: "canada.png" },
+        { country: "Бразилия", file: "brazil.png" },
+        { country: "Австралия", file: "australia.png" },
+        { country: "Индия", file: "india.png" },
+        { country: "Турция", file: "turkey.png" },
+        { country: "Нидерланды", file: "netherlands.png" },
+        { country: "Швеция", file: "sweden.png" },
+        { country: "Швейцария", file: "switzerland.png" },
+        { country: "Австрия", file: "austria.png" },
+        { country: "Бельгия", file: "belgium.png" },
+        { country: "Норвегия", file: "norway.png" },
+        { country: "Дания", file: "denmark.png" },
+        { country: "Финляндия", file: "finland.png" },
+        { country: "Португалия", file: "portugal.png" },
+        { country: "Греция", file: "greece.png" },
+        { country: "Чехия", file: "czech_republic.png" },
+        { country: "Румыния", file: "romania.png" },
+        { country: "Венгрия", file: "hungary.png" },
+        { country: "Болгария", file: "bulgaria.png" },
+        { country: "Словакия", file: "slovakia.png" },
+        { country: "Хорватия", file: "croatia.png" },
+        { country: "Ирландия", file: "ireland.png" },
+        { country: "Сербия", file: "serbia.png" },
+        { country: "Литва", file: "lithuania.png" },
+        { country: "Латвия", file: "latvia.png" },
+        { country: "Эстония", file: "estonia.png" },
+        { country: "Словения", file: "slovenia.png" },
+        { country: "Кипр", file: "cyprus.png" },
+        { country: "Мальта", file: "malta.png" },
+        { country: "Исландия", file: "iceland.png" },
+        { country: "Люксембург", file: "luxembourg.png" },
+        { country: "Черногория", file: "montenegro.png" },
+        { country: "Албания", file: "albania.png" },
+        { country: "Северная Македония", file: "north_macedonia.png" },
+        { country: "Босния и Герцеговина", file: "bosnia_herzegovina.png" },
+        { country: "Молдова", file: "moldova.png" },
+        { country: "Беларусь", file: "belarus.png" },
+        { country: "Армения", file: "armenia.png" },
+        { country: "Грузия", file: "georgia.png" },
+        { country: "Азербайджан", file: "azerbaijan.png" },
+        { country: "Казахстан", file: "kazakhstan.png" },
+        { country: "Узбекистан", file: "uzbekistan.png" },
+        { country: "Израиль", file: "israel.png" },
+        { country: "Саудовская Аравия", file: "saudi_arabia.png" },
+        { country: "ОАЭ", file: "united_arab_emirates.png" },
+        { country: "Катар", file: "qatar.png" },
+        { country: "Южная Корея", file: "south_korea.png" },
+        { country: "Таиланд", file: "thailand.png" },
+        { country: "Малайзия", file: "malaysia.png" },
+        { country: "Сингапур", file: "singapore.png" },
+        { country: "Вьетнам", file: "vietnam.png" },
+        { country: "Индонезия", file: "indonesia.png" },
+        { country: "Филиппины", file: "philippines.png" },
+        { country: "Мексика", file: "mexico.png" },
+        { country: "Аргентина", file: "argentina.png" },
+        { country: "Чили", file: "chile.png" },
+        { country: "Колумбия", file: "colombia.png" },
+        { country: "Перу", file: "peru.png" },
+        { country: "Венесуэла", file: "venezuela.png" },
+        { country: "Египет", file: "egypt.png" },
+        { country: "ЮАР", file: "south_africa.png" },
+        { country: "Нигерия", file: "nigeria.png" },
+        { country: "Кения", file: "kenya.png" },
+        { country: "Марокко", file: "morocco.png" },
+        { country: "Тунис", file: "tunisia.png" },
+        { country: "Алжир", file: "algeria.png" },
+        { country: "Ангола", file: "angola.png" },
+        { country: "Гана", file: "ghana.png" },
+        { country: "Эфиопия", file: "ethiopia.png" },
+        { country: "Танзания", file: "tanzania.png" },
+        { country: "Куба", file: "cuba.png" },
+        { country: "Доминиканская Республика", file: "dominican_republic.png" },
+        { country: "Ямайка", file: "jamaica.png" },
+        { country: "Гаити", file: "haiti.png" },
+        { country: "Панама", file: "panama.png" },
+        { country: "Коста-Рика", file: "costa_rica.png" },
+        { country: "Гватемала", file: "guatemala.png" },
+        { country: "Сальвадор", file: "el_salvador.png" },
+        { country: "Гондурас", file: "honduras.png" },
+        { country: "Никарагуа", file: "nicaragua.png" },
+        { country: "Парагвай", file: "paraguay.png" },
+        { country: "Уругвай", file: "uruguay.png" },
+        { country: "Эквадор", file: "ecuador.png" },
+        { country: "Боливия", file: "bolivia.png" },
+        { country: "Новая Зеландия", file: "new_zealand.png" },
+        { country: "Фиджи", file: "fiji.png" },
+        { country: "Папуа — Новая Гвинея", file: "papua_new_guinea.png" },
+        { country: "Вануату", file: "vanuatu.png" },
+        { country: "Самоа", file: "samoa.png" },
+        { country: "Иран", file: "iran.png" },
+        { country: "Ирак", file: "iraq.png" },
+        { country: "Афганистан", file: "afghanistan.png" },
+        { country: "Пакистан", file: "pakistan.png" },
+        { country: "Бангладеш", file: "bangladesh.png" },
+        { country: "Шри-Ланка", file: "sri_lanka.png" },
+        { country: "Непал", file: "nepal.png" },
+        { country: "Бутан", file: "bhutan.png" },
+        { country: "Мьянма", file: "myanmar.png" },
+        { country: "Камбоджа", file: "cambodia.png" },
+        { country: "Лаос", file: "laos.png" },
+        { country: "Монголия", file: "mongolia.png" },
+        { country: "Северная Корея", file: "north_korea.png" },
+        { country: "Йемен", file: "yemen.png" },
+        { country: "Оман", file: "oman.png" },
+        { country: "Кувейт", file: "kuwait.png" },
+        { country: "Бахрейн", file: "bahrain.png" },
+        { country: "Иордания", file: "jordan.png" },
+        { country: "Ливан", file: "lebanon.png" },
+        { country: "Сирия", file: "syria.png" },
+        { country: "Палестина", file: "palestine.png" },
+        { country: "Ливия", file: "libya.png" },
+        { country: "Судан", file: "sudan.png" },
+        { country: "Южный Судан", file: "south_sudan.png" },
+        { country: "Чад", file: "chad.png" },
+        { country: "Нигер", file: "niger.png" },
+        { country: "Мали", file: "mali.png" },
+        { country: "Буркина-Фасо", file: "burkina_faso.png" },
+        { country: "Сенегал", file: "senegal.png" },
+        { country: "Гвинея", file: "guinea.png" },
+        { country: "Сьерра-Леоне", file: "sierra_leone.png" },
+        { country: "Либерия", file: "liberia.png" },
+        { country: "Кот-д'Ивуар", file: "cote_divoire.png" },
+        { country: "Гана", file: "ghana.png" },
+        { country: "Того", file: "togo.png" },
+        { country: "Бенин", file: "benin.png" },
+        { country: "Камерун", file: "cameroon.png" },
+        { country: "ЦАР", file: "central_african_republic.png" },
+        { country: "ДР Конго", file: "democratic_republic_of_congo.png" },
+        { country: "Конго", file: "republic_of_congo.png" },
+        { country: "Уганда", file: "uganda.png" },
+        { country: "Руанда", file: "rwanda.png" },
+        { country: "Бурунди", file: "burundi.png" },
+        { country: "Кения", file: "kenya.png" },
+        { country: "Эфиопия", file: "ethiopia.png" },
+        { country: "Сомали", file: "somalia.png" },
+        { country: "Джибути", file: "djibouti.png" },
+        { country: "Эритрея", file: "eritrea.png" },
+        { country: "Замбия", file: "zambia.png" },
+        { country: "Зимбабве", file: "zimbabwe.png" },
+        { country: "Мозамбик", file: "mozambique.png" },
+        { country: "Мадагаскар", file: "madagascar.png" },
+        { country: "Маврикий", file: "mauritius.png" },
+        { country: "Сейшелы", file: "seychelles.png" },
+        { country: "Коморы", file: "comoros.png" },
+        { country: "Белиз", file: "belize.png" },
+        { country: "Багамы", file: "bahamas.png" },
+        { country: "Барбадос", file: "barbados.png" },
+        { country: "Тринидад и Тобаго", file: "trinidad_tobago.png" },
+        { country: "Гренада", file: "grenada.png" },
+        { country: "Сент-Люсия", file: "saint_lucia.png" },
+        { country: "Сент-Винсент и Гренадины", file: "saint_vincent_grenadines.png" },
+        { country: "Антигуа и Барбуда", file: "antigua_barbuda.png" },
+        { country: "Сент-Китс и Невис", file: "saint_kitts_nevis.png" },
+        { country: "Доминика", file: "dominica.png" },
+        { country: "Суринам", file: "suriname.png" },
+        { country: "Гайана", file: "guyana.png" },
+        { country: "Андорра", file: "andorra.png" },
+        { country: "Лихтенштейн", file: "liechtenstein.png" },
+        { country: "Монако", file: "monaco.png" },
+        { country: "Сан-Марино", file: "san_marino.png" },
+        { country: "Ватикан", file: "vatican_city.png" },
+        { country: "Мальдивы", file: "maldives.png" },
+        { country: "Бруней", file: "brunei.png" },
+        { country: "Восточный Тимор", file: "east_timor.png" },
+        { country: "Кирибати", file: "kiribati.png" },
+        { country: "Маршалловы Острова", file: "marshall_islands.png" },
+        { country: "Микронезия", file: "micronesia.png" },
+        { country: "Науру", file: "nauru.png" },
+        { country: "Палау", file: "palau.png" },
+        { country: "Соломоновы Острова", file: "solomon_islands.png" },
+        { country: "Тонга", file: "tonga.png" },
+        { country: "Тувалу", file: "tuvalu.png" },
+        { country: "Кабо-Верде", file: "cape_verde.png" },
+        { country: "Сан-Томе и Принсипи", file: "sao_tome_and_principe.png" },
+        { country: "Гвинея-Бисау", file: "guinea_bissau.png" },
+        { country: "Экваториальная Гвинея", file: "equatorial_guinea.png" },
+        { country: "Габон", file: "gabon.png" },
+        { country: "Ботсвана", file: "botswana.png" },
+        { country: "Намибия", file: "namibia.png" },
+        { country: "Лесото", file: "lesotho.png" },
+        { country: "Эсватини", file: "eswatini.png" },
+        { country: "Мавритания", file: "mauritania.png" },
+        { country: "Западная Сахара", file: "western_sahara.png" },
+        { country: "Гамбия", file: "gambia.png" },
+        { country: "Кыргызстан", file: "kyrgyzstan.png" },
+        { country: "Таджикистан", file: "tajikistan.png" },
+        { country: "Туркменистан", file: "turkmenistan.png" }
       ];
 
-      const ALL_CARDS = [
+      const POLITICIANS = [
         {
           "name":"Ханс-Адам II",
           "title":"Князь",
@@ -1229,27 +1506,42 @@
         }
       ];
 
+      const RARITY_CHANCES = {
+        'Обычные': 50,
+        'Редкие': 25,
+        'Эпические': 12,
+        'Легендарные': 7,
+        'Мифические': 4,
+        'Секретные': 2
+      };
+
       const $ = id => document.getElementById(id);
 
-      const reel1 = $('reelInner1');
-      const reel2 = $('reelInner2');
-      const reel3 = $('reelInner3');
-      const slotsSpinBtn = $('slotsSpinBtn');
-      const slotsTimer = $('slotsTimer');
-      const slotSpinSound = $('slot-spin-sound');
-      const winSound = $('win-sound');
-      const lossSound = $('loss-sound');
+      const flagImage = $('flagImage');
+      const answersContainer = $('answersContainer');
+      const restartBtn = $('restartBtn');
+      const currentScoreEl = $('currentScore');
+      const bestScoreEl = $('bestScore');
+      const correctSound = $('correct-sound');
+      const incorrectSound = $('incorrect-sound');
       const clickSound = $('click-sound');
       const bgMusic = $('bg-music');
       const settingsBtn = $('settingsBtn');
-      const slotsResultModal = $('slots-result-modal');
-      const closeResultBtn = $('closeResult');
-      const resultContent = $('resultContent');
+      const inventoryBtn = $('inventoryBtn');
+      const inventory = $('inventory');
+      const closeInventory = $('closeInventory');
+      const cardsGrid = $('cardsGrid');
+      const invCount = $('invCount');
+      const cardModal = $('card-modal');
+      const closeCardModal = $('closeCardModal');
+      const cardModalContent = $('cardModalContent');
 
-      let isSpinning = false;
-      let canSpin = true;
-      let timerInterval = null;
-      let CARDS = [];
+      let currentScore = 0;
+      let bestScore = 0;
+      let usedFlags = new Set();
+      let currentFlag = null;
+      let isAnswerSelected = false;
+      let playerCards = [];
 
       function initMusic() {
         const bgMusic = $('bg-music');
@@ -1279,17 +1571,69 @@
         }
       }
 
+      function loadScores() {
+        try {
+          const savedBest = localStorage.getItem('bestScore');
+          bestScore = savedBest ? parseInt(savedBest) : 0;
+          bestScoreEl.textContent = bestScore;
+        } catch (e) {
+          bestScore = 0;
+        }
+      }
+
+      function saveBestScore() {
+        localStorage.setItem('bestScore', bestScore.toString());
+      }
+
       function loadPlayerCards() {
         try {
           const saved = localStorage.getItem('playerCards');
-          CARDS = saved ? JSON.parse(saved) : [];
+          playerCards = saved ? JSON.parse(saved) : [];
+          updateInventoryCount();
         } catch (e) {
-          CARDS = [];
+          playerCards = [];
         }
       }
 
       function savePlayerCards() {
-        localStorage.setItem('playerCards', JSON.stringify(CARDS));
+        localStorage.setItem('playerCards', JSON.stringify(playerCards));
+        updateInventoryCount();
+      }
+
+      function updateInventoryCount() {
+        invCount.textContent = `Карт: ${playerCards.length}/${POLITICIANS.length}`;
+      }
+
+      function getRandomFlag() {
+        const availableFlags = FLAGS.filter(flag => !usedFlags.has(flag.file));
+        
+        if (availableFlags.length === 0) {
+          usedFlags.clear();
+          return FLAGS[Math.floor(Math.random() * FLAGS.length)];
+        }
+
+        let pool = availableFlags;
+        
+        if (currentScore < 5) {
+          pool = availableFlags.slice(0, 20);
+        } else if (currentScore < 10) {
+          pool = availableFlags.slice(0, 50);
+        }
+
+        if (pool.length === 0) {
+          pool = availableFlags;
+        }
+
+        return pool[Math.floor(Math.random() * pool.length)];
+      }
+
+      function getRandomAnswers(correctCountry, count = 3) {
+        const otherCountries = FLAGS
+          .map(flag => flag.country)
+          .filter(country => country !== correctCountry);
+        
+        const shuffled = otherCountries.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
       }
 
       function getRandomByWeights(weights) {
@@ -1302,166 +1646,186 @@
         return Object.keys(weights)[0];
       }
 
-      function getSymbolsByRarity(rarity) {
-        return SYMBOLS.filter(symbol => symbol.rarity === rarity);
-      }
-
       function getRandomCardByRarity(rarity) {
-        const pool = ALL_CARDS.filter(card => card.rarity === rarity);
+        const pool = POLITICIANS.filter(card => card.rarity === rarity);
         return pool.length > 0 ? {...pool[Math.floor(Math.random() * pool.length)]} : null;
       }
 
       function addCardToCollection(card) {
         if (!card) return false;
 
-        const existingCard = CARDS.find(c =>
+        const existingCard = playerCards.find(c =>
           c.name === card.name && c.country === card.country
         );
 
         if (!existingCard) {
-          CARDS.push(card);
+          playerCards.push(card);
           savePlayerCards();
           return true;
         }
         return false;
       }
 
-      function initReels() {
-        [reel1, reel2, reel3].forEach(reel => {
-          if (!reel) return;
-          reel.innerHTML = '';
-          
-          for (let i = 0; i < 30; i++) {
-            const symbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-            const item = document.createElement('div');
-            item.className = 'reel-item';
-            
-            const img = document.createElement('img');
-            img.src = symbol.image;
-            img.alt = 'Symbol';
-            
-            item.appendChild(img);
-            reel.appendChild(item);
-          }
+      function showNewFlag() {
+        isAnswerSelected = false;
+        restartBtn.classList.add('hidden');
+        
+        currentFlag = getRandomFlag();
+        usedFlags.add(currentFlag.file);
+        
+        flagImage.src = `flag/${currentFlag.file}`;
+        flagImage.style.animation = 'fadeIn 0.5s ease';
+        
+        const correctAnswer = currentFlag.country;
+        const wrongAnswers = getRandomAnswers(correctAnswer, 3);
+        const allAnswers = [correctAnswer, ...wrongAnswers].sort(() => 0.5 - Math.random());
+        
+        answersContainer.innerHTML = '';
+        
+        allAnswers.forEach(answer => {
+          const button = document.createElement('button');
+          button.className = 'answer-btn';
+          button.textContent = answer;
+          button.addEventListener('click', () => handleAnswer(answer === correctAnswer, button));
+          answersContainer.appendChild(button);
         });
       }
 
-      function spinReels(targetSymbol) {
-        if (!reel1 || !reel2 || !reel3) return;
-
-        const reels = [reel1, reel2, reel3];
-        const spinDuration = 4000;
+      function handleAnswer(isCorrect, button) {
+        if (isAnswerSelected) return;
+        isAnswerSelected = true;
         
-        reels.forEach((reel, index) => {
-          const currentPosition = parseInt(reel.style.transform?.replace('translateY(', '').replace('px)', '') || '0');
-          const targetPosition = currentPosition - (100 * 15) - (100 * index * 2);
+        if (isCorrect) {
+          playSound(correctSound);
+          button.classList.add('correct');
+          currentScore++;
+          currentScoreEl.textContent = currentScore;
           
-          reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.2, 0.8, 0.3, 1)`;
-          reel.style.transform = `translateY(${targetPosition}px)`;
-        });
-
-        setTimeout(() => {
-          reels.forEach(reel => {
-            reel.style.transition = 'none';
-            const currentPosition = parseInt(reel.style.transform.replace('translateY(', '').replace('px)', ''));
-            const adjustedPosition = currentPosition % (100 * SYMBOLS.length);
-            reel.style.transform = `translateY(${adjustedPosition}px)`;
-          });
-
-          showResult(targetSymbol.rarity);
-        }, spinDuration);
-      }
-
-      function startTimer(seconds) {
-        canSpin = false;
-        slotsSpinBtn.disabled = true;
-        let timeLeft = seconds;
-        updateTimer(timeLeft);
-
-        if (timerInterval) clearInterval(timerInterval);
-
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          updateTimer(timeLeft);
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            canSpin = true;
-            slotsSpinBtn.disabled = false;
+          if (currentScore > bestScore) {
+            bestScore = currentScore;
+            bestScoreEl.textContent = bestScore;
+            saveBestScore();
           }
-        }, 1000);
-      }
-
-      function spinSlots() {
-        if (isSpinning || !canSpin) return;
-        
-        playSound(clickSound);
-        isSpinning = true;
-        slotsSpinBtn.disabled = true;
-        
-        const targetRarity = getRandomByWeights(RARITY_CHANCES);
-        const targetSymbols = getSymbolsByRarity(targetRarity);
-        const targetSymbol = targetSymbols[Math.floor(Math.random() * targetSymbols.length)];
-        
-        playSound(slotSpinSound);
-
-        spinReels(targetSymbol);
-
-        setTimeout(() => {
-          slotSpinSound.pause();
-          slotSpinSound.currentTime = 0;
-          isSpinning = false;
-        }, 4000);
-      }
-
-      function updateTimer(seconds) {
-        if (seconds > 0) {
-          slotsTimer.textContent = `Следующий спин через: ${seconds}сек`;
-        } else {
-          slotsTimer.textContent = 'Можно крутить';
-        }
-      }
-
-      function showResult(rarity) {
-        const card = getRandomCardByRarity(rarity);
-        if (card) {
-          const added = addCardToCollection(card);
           
-          if (added) {
-            playSound(winSound);
+          if (currentScore % 10 === 0) {
+            const rarity = getRandomByWeights(RARITY_CHANCES);
+            const card = getRandomCardByRarity(rarity);
+            if (card) {
+              const added = addCardToCollection(card);
+              showCardModal(card, added);
+            }
           } else {
-            playSound(lossSound);
+            setTimeout(showNewFlag, 1000);
+          }
+        } else {
+          playSound(incorrectSound);
+          button.classList.add('incorrect');
+          
+          const correctButton = Array.from(answersContainer.children).find(
+            btn => btn.textContent === currentFlag.country
+          );
+          if (correctButton) {
+            correctButton.classList.add('correct');
           }
           
-          resultContent.innerHTML = `
-            <h2 class="result-title">${added ? 'НОВАЯ КАРТА!' : 'УПС.. ПОВТОРКА'}</h2>
-            <div class="result-card">
-              <img src="${card.image || 'images/foto.png'}" 
-                   onerror="this.src='images/foto.png'" 
-                   alt="${card.name}">
-              <h3>${card.name}</h3>
-              <p>${card.title} • ${card.country}</p>
-              <div class="result-rarity rarity-${card.rarity}">${card.rarity}</div>
-            </div>
-            <p style="color: var(--text-secondary); margin-top: 15px;">
-              ${!added ? 'Эта карта уже есть в вашей коллекции' : 'Карта добавлена в коллекцию!'}
-            </p>
-          `;
-        } else {
-          resultContent.innerHTML = `
-            <h2 class="result-title">ОШИБКА</h2>
-            <p style="color: var(--text-secondary);">
-              Не удалось получить карту. Попробуйте еще раз.
-            </p>
-          `;
+          restartBtn.classList.remove('hidden');
         }
-        
-        slotsResultModal.classList.remove('hidden');
       }
 
-      function closeResultModal() {
-        if (!slotsResultModal) return;
-        slotsResultModal.classList.add('hidden');
-        startTimer(10);
+      function showCardModal(card, isNew) {
+        cardModalContent.innerHTML = `
+          <h2 style="margin-bottom: 20px; color: var(--text-primary);">${isNew ? 'НОВАЯ КАРТА!' : 'ПОВТОРКА'}</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+            <div>
+              <img src="${card.image}" alt="${card.name}" style="width: 100%; border-radius: var(--radius-md);">
+            </div>
+            <div>
+              <h3 style="font-size: 20px; margin-bottom: 8px;">${card.name}</h3>
+              <p style="color: var(--text-secondary); margin-bottom: 8px;">${card.title}</p>
+              <p style="color: var(--text-secondary); margin-bottom: 12px;">${card.country}</p>
+              <div class="rarity-badge" style="background: ${getRarityColor(card.rarity)}; color: #000; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+                ${card.rarity}
+              </div>
+              <p style="margin-top: 12px; color: var(--text-secondary); font-size: 14px;">${card.description}</p>
+            </div>
+          </div>
+        `;
+        cardModal.classList.remove('hidden');
+      }
+
+      function getRarityColor(rarity) {
+        const colors = {
+          'Обычные': '#84c78a',
+          'Редкие': '#84b8ff',
+          'Эпические': '#c89cff',
+          'Легендарные': '#ffd37a',
+          'Мифические': '#ff7a7a',
+          'Секретные': '#9ea0a6'
+        };
+        return colors[rarity] || '#9ea0a6';
+      }
+
+      function restartGame() {
+        currentScore = 0;
+        currentScoreEl.textContent = '0';
+        usedFlags.clear();
+        showNewFlag();
+      }
+
+      function openInventory() {
+        playSound(clickSound);
+        renderInventory();
+        inventory.classList.remove('hidden');
+      }
+
+      function closeInventoryModal() {
+        playSound(clickSound);
+        inventory.classList.add('hidden');
+      }
+
+      function closeCardModalFunc() {
+        playSound(clickSound);
+        cardModal.classList.add('hidden');
+        showNewFlag();
+      }
+
+      function renderInventory() {
+        cardsGrid.innerHTML = '';
+        
+        playerCards.forEach(card => {
+          const cardElement = document.createElement('div');
+          cardElement.className = 'card';
+          cardElement.innerHTML = `
+            <img src="${card.image}" alt="${card.name}" onerror="this.src='images/foto.png'">
+            <div class="card-name">${card.name}</div>
+            <div class="card-meta">${card.title}<br>${card.country}</div>
+            <div class="rarity-strip rarity-${card.rarity}"></div>
+          `;
+          cardElement.addEventListener('click', () => showCardDetails(card));
+          cardsGrid.appendChild(cardElement);
+        });
+
+        updateInventoryCount();
+      }
+
+      function showCardDetails(card) {
+        cardModalContent.innerHTML = `
+          <h2 style="margin-bottom: 20px; color: var(--text-primary);">${card.name}</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+            <div>
+              <img src="${card.image}" alt="${card.name}" style="width: 100%; border-radius: var(--radius-md);">
+            </div>
+            <div>
+              <h3 style="font-size: 18px; margin-bottom: 8px;">${card.title}</h3>
+              <p style="color: var(--text-secondary); margin-bottom: 12px;">${card.country}</p>
+              <div class="rarity-badge" style="background: ${getRarityColor(card.rarity)}; color: #000; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+                ${card.rarity}
+              </div>
+              <p style="margin-top: 12px; color: var(--text-secondary); font-size: 14px;">${card.description}</p>
+            </div>
+          </div>
+        `;
+        cardModal.classList.remove('hidden');
       }
 
       function openSettings() {
@@ -1500,7 +1864,7 @@
             </div>
             <div>
               <label style="display: block; margin-bottom: 8px; font-weight: 600;">Громкость эффектов</label>
-              <input id="sfxRange" type="range" min="0" max="1" step="0.01" value="${slotSpinSound ? slotSpinSound.volume : 1}"
+              <input id="sfxRange" type="range" min="0" max="1" step="0.01" value="${correctSound ? correctSound.volume : 1}"
                      style="width: 100%;">
             </div>
             <button id="resetProgress" style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer;">Сбросить прогресс</button>
@@ -1525,26 +1889,31 @@
 
         sfxRange.addEventListener('input', (e) => {
           const v = Number(e.target.value);
-          slotSpinSound.volume = v;
-          winSound.volume = v;
-          lossSound.volume = v;
+          correctSound.volume = v;
+          incorrectSound.volume = v;
           clickSound.volume = v;
           localStorage.setItem('sfxVol', String(v));
         });
 
         resetProgress.addEventListener('click', () => {
           playSound(clickSound);
-          if (confirm('Вы уверены, что хотите сбросить весь прогресс? Все карты будут удалены.')) {
-            CARDS = [];
-            savePlayerCards();
+          if (confirm('Вы уверены, что хотите сбросить весь прогресс? Все карты и рекорд будут удалены.')) {
+            localStorage.removeItem('bestScore');
+            localStorage.removeItem('playerCards');
+            bestScore = 0;
+            bestScoreEl.textContent = '0';
+            currentScore = 0;
+            currentScoreEl.textContent = '0';
+            playerCards = [];
             panel.remove();
+            restartGame();
           }
         });
       }
 
       function init() {
+        loadScores();
         loadPlayerCards();
-        initReels();
         initMusic();
 
         const clickSound = $('click-sound');
@@ -1555,23 +1924,27 @@
           }
         }
 
-        if (slotsSpinBtn) {
-          slotsSpinBtn.addEventListener('click', spinSlots);
+        if (restartBtn) {
+          restartBtn.addEventListener('click', restartGame);
         }
 
         if (settingsBtn) {
-          settingsBtn.addEventListener('click', () => {
-            playSound(clickSound);
-            openSettings();
-          });
+          settingsBtn.addEventListener('click', openSettings);
         }
 
-        if (closeResultBtn) {
-          closeResultBtn.addEventListener('click', () => {
-            playSound(clickSound);
-            closeResultModal();
-          });
+        if (inventoryBtn) {
+          inventoryBtn.addEventListener('click', openInventory);
         }
+
+        if (closeInventory) {
+          closeInventory.addEventListener('click', closeInventoryModal);
+        }
+
+        if (closeCardModal) {
+          closeCardModal.addEventListener('click', closeCardModalFunc);
+        }
+
+        showNewFlag();
       }
 
       document.addEventListener('DOMContentLoaded', init);
